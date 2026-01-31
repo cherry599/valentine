@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>US 💖💋</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;600;900&display=swap');
+
+body{
+ margin:0;
+ font-family:'Poppins',sans-serif;
+ background: radial-gradient(circle,#2b001f,#000);
+ color:white;
+ overflow:hidden;
+ text-align:center;
+}
+
+.screen{
+ min-height:100vh;
+ display:flex;
+ flex-direction:column;
+ justify-content:center;
+ align-items:center;
+ padding:20px;
+}
+
+.hidden{display:none;}
+
+h1{
+ font-size:48px;
+ text-shadow:0 0 15px hotpink,0 0 25px deeppink;
+}
+
+p{
+ max-width:700px;
+ font-size:18px;
+ line-height:1.7;
+ margin:10px auto;
+}
+
+button{
+ padding:16px 36px;
+ font-size:18px;
+ border:none;
+ border-radius:40px;
+ margin:12px;
+ cursor:pointer;
+ background:linear-gradient(45deg,hotpink,deeppink);
+ color:white;
+ box-shadow:0 0 25px hotpink;
+ transition:0.25s;
+}
+button:hover{transform:scale(1.1);}
+
+input{
+ padding:16px;
+ font-size:18px;
+ border-radius:30px;
+ border:none;
+ width:260px;
+ text-align:center;
+ margin:10px;
+}
+
+#stats{
+ position:fixed;
+ top:10px;
+ left:10px;
+ background:rgba(255,255,255,0.1);
+ padding:10px;
+ border-radius:12px;
+ font-size:14px;
+}
+
+.heart, .spark{
+ position:fixed;
+ font-size:20px;
+ animation:fly 4s linear;
+}
+
+@keyframes fly{
+ from{transform:translateY(100vh) scale(0.5);}
+ to{transform:translateY(-20vh) scale(1.5);}
+}
+
+.flash{
+ animation:flash 0.3s alternate infinite;
+}
+
+@keyframes flash{
+ from{color:white;}
+ to{color:hotpink;}
+}
+
+</style>
+</head>
+
+<body>
+
+<div id="stats">
+💋 Kisses: <span id="k">0</span><br>
+🤍 Hugs: <span id="h">0</span><br>
+❤️ Love Level: <span id="l">1</span>
+</div>
+
+<!-- LOGIN -->
+<div id="login" class="screen">
+ <h1 class="flash">ONLY US 💖</h1>
+ <p>This exists because I can’t stop thinking of you.<br>Enter the secret word.</p>
+ <input id="pw" type="password" placeholder="our password">
+ <button onclick="enter()">ENTER</button>
+ <p id="msg"></p>
+</div>
+
+<!-- MAIN -->
+<div id="main" class="screen hidden">
+ <h1>HI MY LOVE 😚💋</h1>
+ <p id="text">Every click here is me sending you my heart.</p>
+ <button onclick="kiss()">💋 Send a Kiss</button>
+ <button onclick="hug()">🤍 Send a Hug</button>
+ <button onclick="tease()">😏 Tease You</button>
+ <button onclick="blush()">🔥 Make You Blush</button>
+</div>
+
+<audio id="music" loop>
+ <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-6.mp3" type="audio/mpeg">
+</audio>
+
+<script>
+const PASSWORD="us";
+let kisses=0,hugs=0,level=1;
+
+function enter(){
+ var val=document.getElementById("pw").value;
+ if(val===PASSWORD){
+  document.getElementById("login").className="screen hidden";
+  document.getElementById("main").className="screen";
+  document.getElementById("music").play();
+  rain();
+ }else{
+  document.getElementById("msg").innerText="Nope… only YOU know it 😌";
+ }
+}
+
+function update(){
+ document.getElementById("k").innerText=kisses;
+ document.getElementById("h").innerText=hugs;
+ document.getElementById("l").innerText=level;
+ if(kisses+hugs>=level*10){level++;explosion();}
+}
+
+function heart(){
+ const h=document.createElement("div");
+ h.className="heart";
+ h.innerText=["💖","💘","💞"][Math.floor(Math.random()*3)];
+ h.style.left=Math.random()*100+"vw";
+ h.style.fontSize=(15+Math.random()*20)+"px";
+ document.body.appendChild(h);
+ setTimeout(()=>h.remove(),4000);
+}
+
+function spark(){
+ const s=document.createElement("div");
+ s.className="spark";
+ s.innerText=["✨","💫","💥"][Math.floor(Math.random()*3)];
+ s.style.left=Math.random()*100+"vw";
+ s.style.fontSize=(12+Math.random()*18)+"px";
+ document.body.appendChild(s);
+ setTimeout(()=>s.remove(),3500);
+}
+
+function rain(){
+ setInterval(()=>{heart();spark();},300);
+}
+
+function kiss(){
+ kisses++;
+ update();
+ for(let i=0;i<5;i++) heart();
+ document.getElementById("text").innerText="Mwah! I’m sending you all my kisses 😘";
+}
+
+function hug(){
+ hugs++;
+ update();
+ for(let i=0;i<5;i++) heart();
+ document.getElementById("text").innerText="Cuuuuuuuuuuute hug coming your way 🤍";
+}
+
+function tease(){
+ for(let i=0;i<8;i++){spark();heart();}
+ document.getElementById("text").innerText="You’re squirming… admit it 😏";
+}
+
+function blush(){
+ for(let i=0;i<15;i++){spark();heart();}
+ document.getElementById("text").innerHTML=
+ "I can’t stop thinking about you…<br>" +
+ "You make me crazy 😳💗<br>" +
+ "Every little thing about you… gahhhh!";
+}
+
+function explosion(){
+ for(let i=0;i<30;i++){heart();spark();}
+}
+
+</script>
+
+</body>
+</html>
