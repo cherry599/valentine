@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>💖 LOVE.EXE — FINAL FORM 💖</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<style>
+body{
+ margin:0;
+ background:radial-gradient(circle,#ff6ec4,#7873f5);
+ font-family:'Comic Sans MS', cursive;
+ overflow:hidden;
+ color:white;
+ text-align:center;
+}
+
+h1{
+ font-size:42px;
+ animation:pulse 1s infinite alternate;
+}
+
+@keyframes pulse{
+ from{transform:scale(1);}
+ to{transform:scale(1.1);}
+}
+
+.box{
+ background:rgba(255,255,255,0.15);
+ border:3px solid pink;
+ border-radius:25px;
+ padding:18px;
+ margin:12px auto;
+ max-width:420px;
+ backdrop-filter:blur(10px);
+}
+
+button{
+ background:#ff2f92;
+ border:none;
+ color:white;
+ padding:12px 20px;
+ border-radius:20px;
+ margin:6px;
+ font-size:15px;
+ cursor:pointer;
+}
+button:hover{transform:scale(1.2);}
+
+.hidden{display:none;}
+
+.heart{
+ position:absolute;
+ font-size:28px;
+ animation:float 6s linear infinite;
+ cursor:pointer;
+}
+
+@keyframes float{
+ from{transform:translateY(100vh);}
+ to{transform:translateY(-200px);}
+}
+
+.confetti{
+ position:fixed;
+ width:8px;
+ height:8px;
+ animation:fall 2s linear forwards;
+}
+
+@keyframes fall{
+ to{transform:translateY(100vh) rotate(720deg);}
+}
+
+.popup{
+ position:fixed;
+ top:50%;
+ left:50%;
+ transform:translate(-50%,-50%);
+ background:#fff;
+ color:#ff2f92;
+ padding:25px;
+ border-radius:20px;
+ z-index:9999;
+ max-width:300px;
+}
+</style>
+</head>
+
+<body>
+
+<h1>💖 LOVE.EXE 💖</h1>
+
+<audio autoplay loop>
+ <source src="https://cdn.pixabay.com/audio/2022/10/30/audio_946b5bb5c6.mp3">
+</audio>
+
+<div id="login" class="box">
+ <h2>🔐 PASSWORD REQUIRED</h2>
+ <input id="pw" placeholder="our secret 👀">
+ <br><br>
+ <button onclick="login()">ENTER</button>
+ <p id="msg"></p>
+</div>
+
+<div id="game" class="hidden">
+
+<div class="box">
+ ❤️ XP: <span id="xp">0</span><br>
+ ⭐ Level: <span id="lvl">1</span><br>
+ 🔥 Streak: <span id="streak">0</span> days
+</div>
+
+<div class="box">
+ <h3>💥 CHAOS ZONE</h3>
+ <button onclick="spawn()">SPAWN HEARTS</button>
+ <button onclick="confetti()">CONFETTI BOMB</button>
+</div>
+
+<div class="box">
+ <h3>🎮 GAMES</h3>
+ <button onclick="reaction()">REACTION TEST</button>
+ <button onclick="memory()">MEMORY GAME</button>
+ <button onclick="chase()">CHASE THE HEART</button>
+</div>
+
+<div class="box">
+ <h3>📦 LOVE LOOT</h3>
+ <button onclick="loot()">OPEN LOOT BOX</button>
+ <p id="lootText"></p>
+</div>
+
+<div class="box">
+ <h3>💌 TIME-LOCKED LETTER</h3>
+ <button onclick="letter()">OPEN</button>
+ <p id="letterText"></p>
+</div>
+
+</div>
+
+<div id="popup" class="popup hidden"></div>
+
+<script>
+const PASSWORD="myheart";
+
+let xp=+localStorage.xp||0;
+let lvl=+localStorage.lvl||1;
+let streak=+localStorage.streak||0;
+let last=localStorage.last||"";
+
+xpEl.innerText=xp;lvlEl.innerText=lvl;streakEl.innerText=streak;
+
+function login(){
+ if(pw.value===PASSWORD){
+  login.classList.add("hidden");
+  game.classList.remove("hidden");
+  daily();
+  autoHearts();
+  system();
+ } else msg.innerText="WRONG 😤";
+}
+
+function save(){
+ localStorage.xp=xp;
+ localStorage.lvl=lvl;
+ localStorage.streak=streak;
+}
+
+function add(n){
+ xp+=n;
+ if(xp>=lvl*150){
+  lvl++;
+  pop("⭐ LEVEL UP!");
+ }
+ xpEl.innerText=xp;
+ lvlEl.innerText=lvl;
+ save();
+}
+
+function daily(){
+ let t=new Date().toDateString();
+ if(last!==t){
+  if(last){
+   let d=(new Date(t)-new Date(last))/(86400000);
+   if(d>1){
+    streak=1;
+    pop("💔 You disappeared…");
+   } else {
+    streak++;
+    pop("🔥 STREAK "+streak);
+    add(100);
+   }
+  } else {
+   streak=1;
+   pop("💎 FIRST LOGIN BONUS");
+   add(150);
+  }
+  last=t;
+  localStorage.last=t;
+  streakEl.innerText=streak;
+ }
+}
+
+function spawn(){
+ for(let i=0;i<20;i++)heart();
+}
+
+function heart(){
+ let h=document.createElement("div");
+ h.className="heart";
+ h.innerText=["❤️","💖","💘","💕"][Math.random()*4|0];
+ h.style.left=Math.random()*innerWidth+"px";
+ h.onclick=()=>{add(10);h.remove();};
+ document.body.appendChild(h);
+ setTimeout(()=>h.remove(),7000);
+}
+
+function autoHearts(){
+ setInterval(heart,500);
+}
+
+function confetti(){
+ for(let i=0;i<60;i++){
+  let c=document.createElement("div");
+  c.className="confetti";
+  c.style.left=Math.random()*innerWidth+"px";
+  c.style.background=`hsl(${Math.random()*360},80%,60%)`;
+  document.body.appendChild(c);
+  setTimeout(()=>c.remove(),2000);
+ }
+}
+
+function pop(t){
+ popup.innerText=t;
+ popup.classList.remove("hidden");
+ setTimeout(()=>popup.classList.add("hidden"),2200);
+}
+
+function reaction(){
+ pop("WAIT...");
+ setTimeout(()=>{
+  pop("CLICK!");
+  document.body.onclick=()=>{add(80);pop("⚡ FAST");document.body.onclick=null;}
+ },1000+Math.random()*2000);
+}
+
+function memory(){
+ let seq=[];
+ for(let i=0;i<5;i++)seq.push(Math.random()>0.5?"❤️":"💔");
+ pop("REMEMBER: "+seq.join(" "));
+ setTimeout(()=>{
+  let ans=prompt("Type sequence:");
+  if(ans===seq.join(" ")){add(120);pop("🧠 PERFECT");}
+  else pop("😈 TRY AGAIN");
+ },3000);
+}
+
+function chase(){
+ let score=0;
+ let t=10;
+ pop("CHASE MODE!");
+ let i=setInterval(()=>{
+  heart();
+  t--;
+  if(t<=0){clearInterval(i);add(score*20);pop("🏁 SCORE "+score);}
+ },800);
+ document.body.onclick=()=>score++;
+}
+
+function loot(){
+ let items=[
+  "💌 I miss you.",
+  "💍 Forever?",
+  "😈 You’re addicted.",
+  "❤️ This is ours.",
+  "🔥 Come back tomorrow."
+ ];
+ let it=items[Math.random()*items.length|0];
+ lootText.innerText=it;
+ add(50);
+}
+
+function letter(){
+ if(streak>=3){
+  letterText.innerText="No distance scares me. You’re home.";
+ } else letterText.innerText="Come back for 3 days 😌";
+}
+
+function system(){
+ let msgs=[
+  "📡 Monitoring heartbeat…",
+  "💖 Love stable.",
+  "⚠️ Missing her detected.",
+  "😈 Opening again soon…"
+ ];
+ setInterval(()=>pop(msgs[Math.random()*msgs.length|0]),15000);
+}
+<script>
+/* ===== LOVE WORLD EXPANSION ===== */
+
+let area=localStorage.area||"Locked";
+let mode=localStorage.mode||"";
+let coins=Number(localStorage.coins)||0;
+
+const modes=[
+ {name:"Soft 💕",msg:"I just want you. Nothing else."},
+ {name:"Tease 😈",msg:"You can’t stop opening this, can you?"},
+ {name:"Intense 🔥",msg:"You’re mine. Distance doesn’t change that."}
+];
+
+const areas={
+ "Miss You Meadow":2,
+ "Overthinking Cave":5,
+ "Forever City":8
+};
+
+/* MODE SELECT */
+function pickMode(){
+ let m=modes[Math.floor(Math.random()*modes.length)];
+ mode=m.name;
+ localStorage.mode=mode;
+ pop("🧬 MODE: "+m.name+"\n"+m.msg);
+}
+pickMode();
+
+/* TIME AWARE */
+(function timeCheck(){
+ let h=new Date().getHours();
+ if(h>=22||h<=5) pop("🌙 Can’t sleep without you.");
+ else if(h<=10) pop("☀️ You’re my first thought.");
+})();
+
+/* LOVE MAP */
+function openMap(){
+ let text="🌍 LOVE MAP\n";
+ for(let a in areas){
+  if(lvl>=areas[a]) text+="✅ "+a+"\n";
+  else text+="🔒 "+a+" (Level "+areas[a]+")\n";
+ }
+ pop(text);
+}
+
+/* ENTER AREA */
+function enterArea(name){
+ if(lvl>=areas[name]){
+  area=name;
+  localStorage.area=name;
+  add(200);
+  pop("📍 Entered "+name+"\nSomething about this place feels like us.");
+ } else pop("🔒 Not ready yet.");
+}
+
+/* SHOP */
+function shop(){
+ let text="🛍️ LOVE SHOP\n";
+ text+="1️⃣ Tease message (100 XP)\n";
+ text+="2️⃣ New music (200 XP)\n";
+ text+="3️⃣ Secret mood (300 XP)";
+ let c=prompt(text);
+ if(c=="1"&&xp>=100){xp-=100;pop("😈 You’re obsessed with me.");}
+ if(c=="2"&&xp>=200){xp-=200;pop("🎵 Music unlocked (in your head).");}
+ if(c=="3"&&xp>=300){xp-=300;pop("🖤 Dark romance mode activated.");}
+ save();
+}
+
+/* ACHIEVEMENT LOG */
+function logAchievements(){
+ let a=[
+  "Opened multiple days",
+  "Reached Level "+lvl,
+  "Can’t stay away",
+  "Emotionally compromised 😌"
+ ];
+ pop("🏆 ACHIEVEMENTS\n"+a.join("\n"));
+}
+
+/* GUILT ARC */
+(function guilt(){
+ let last=new Date(localStorage.last||new Date());
+ let days=(Date.now()-last)/(86400000);
+ if(days>2) pop("💔 I noticed you didn’t come back… I waited.");
+})();
+
+/* ADD UI BUTTONS */
+setTimeout(()=>{
+ document.querySelector("#game").innerHTML+=`
+ <div class="box">
+ <h3>🌍 LOVE WORLD</h3>
+ <button onclick="openMap()">OPEN MAP</button>
+ <button onclick="shop()">SHOP</button>
+ <button onclick="logAchievements()">ACHIEVEMENTS</button>
+ </div>
+ `;
+},1000);
+
+</script>
+</body>
+</html>
