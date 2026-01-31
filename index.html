@@ -99,7 +99,7 @@ button:hover{transform:scale(1.2);}
  <h2>🔐 PASSWORD REQUIRED</h2>
  <input id="pw" placeholder="our secret 👀">
  <br><br>
- <button onclick="login()">ENTER</button>
+ <button onclick="doLogin()">ENTER</button>
  <p id="msg"></p>
 </div>
 
@@ -152,7 +152,7 @@ let last=localStorage.last||"";
 
 xpEl.innerText=xp;lvlEl.innerText=lvl;streakEl.innerText=streak;
 
-function login(){
+function doLogin(){
  if(pw.value===PASSWORD){
   login.classList.add("hidden");
   game.classList.remove("hidden");
