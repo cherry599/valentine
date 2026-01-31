@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Us 💖</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;600;900&display=swap');
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Poppins',sans-serif;}
+
+body{
+ background:radial-gradient(circle at top,#20001a,#000);
+ color:white;
+ overflow-x:hidden;
+}
+
+.hidden{display:none;}
+
+.screen{
+ min-height:100vh;
+ display:flex;
+ flex-direction:column;
+ justify-content:center;
+ align-items:center;
+ padding:30px;
+ text-align:center;
+}
+
+h1{font-size:38px;margin-bottom:15px;}
+p{max-width:750px;line-height:1.8;margin:12px auto;opacity:0.95;}
+
+button{
+ padding:14px 30px;
+ border:none;
+ border-radius:40px;
+ font-size:16px;
+ margin:10px;
+ cursor:pointer;
+ background:linear-gradient(45deg,#ff4da6,#ff004f);
+ color:white;
+ transition:0.3s;
+}
+button:hover{transform:scale(1.1);}
+
+input{
+ padding:14px;
+ border-radius:30px;
+ border:none;
+ font-size:16px;
+ width:260px;
+ text-align:center;
+ margin:15px;
+}
+
+#stats{
+ position:fixed;
+ top:10px;
+ left:10px;
+ background:rgba(255,255,255,0.1);
+ padding:12px;
+ border-radius:14px;
+ font-size:14px;
+}
+
+.heart{
+ position:fixed;
+ color:hotpink;
+ font-size:18px;
+ animation:float 4s linear infinite;
+}
+
+@keyframes float{
+ from{transform:translateY(100vh);}
+ to{transform:translateY(-10vh);}
+}
+</style>
+</head>
+
+<body>
+
+<div id="stats">
+💋 Kisses: <span id="kisses">0</span><br>
+🤍 Hugs: <span id="hugs">0</span><br>
+❤️ Love Level: <span id="level">1</span>
+</div>
+
+<!-- LOGIN -->
+<div id="login" class="screen">
+ <h1>Only Us 💖</h1>
+ <p>This place exists because of *us*.  
+ No one else belongs here.</p>
+ <input id="pw" type="password" placeholder="our password">
+ <button onclick="enter()">ENTER</button>
+ <p id="msg"></p>
+</div>
+
+<!-- HOME -->
+<div id="home" class="screen hidden">
+ <h1>Hi, my love 😚</h1>
+ <p>I made this because I can’t hug you whenever I want…  
+ so this is my way of pulling you closer.</p>
+
+ <button onclick="kiss()">💋 Kiss Me</button>
+ <button onclick="hug()">🤍 Hug Me</button>
+ <button onclick="game()">🎮 Kiss Game</button>
+ <button onclick="note()">💌 Read My Heart</button>
+</div>
+
+<!-- GAME -->
+<div id="game" class="screen hidden">
+ <h1>💋 Catch the Kiss 💋</h1>
+ <p>Tap fast. Every tap is a kiss I owe you.</p>
+ <button onclick="tap()">KISS 😘</button>
+ <button onclick="back()">Back to Us</button>
+</div>
+
+<audio id="music" loop>
+ <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-6.mp3">
+</audio>
+
+<script>
+const PASSWORD="us";
+let kisses=0, hugs=0, level=1;
+
+function enter(){
+ if(document.getElementById("pw").value===PASSWORD){
+  document.getElementById("login").classList.add("hidden");
+  document.getElementById("home").classList.remove("hidden");
+  document.getElementById("music").play();
+  rainHearts();
+ }else{
+  document.getElementById("msg").innerText="Nope. Only *you* know it 😌";
+ }
+}
+
+document.getElementById("pw").addEventListener("keydown",e=>{
+ if(e.key==="Enter") enter();
+});
+
+function update(){
+ document.getElementById("kisses").innerText=kisses;
+ document.getElementById("hugs").innerText=hugs;
+ document.getElementById("level").innerText=level;
+ if(kisses+hugs>=level*20){level++;}
+}
+
+function kiss(){
+ kisses++;
+ update();
+ popHeart();
+ alert("That kiss? I felt it 😚");
+}
+
+function hug(){
+ hugs++;
+ update();
+ popHeart();
+ alert("Come here… tighter 🤍");
+}
+
+function game(){
+ document.getElementById("home").classList.add("hidden");
+ document.getElementById("game").classList.remove("hidden");
+}
+
+function tap(){
+ kisses+=3;
+ update();
+ popHeart();
+}
+
+function back(){
+ document.getElementById("game").classList.add("hidden");
+ document.getElementById("home").classList.remove("hidden");
+}
+
+function note(){
+ const notes=[
+  "I miss you in quiet moments.",
+  "You feel like home to me.",
+  "Every kiss here is a promise.",
+  "Distance hasn’t touched us.",
+  "You’re my favorite person."
+ ];
+ alert(notes[Math.floor(Math.random()*notes.length)]);
+}
+
+function popHeart(){
+ const h=document.createElement("div");
+ h.className="heart";
+ h.innerText="💖";
+ h.style.left=Math.random()*100+"vw";
+ document.body.appendChild(h);
+ setTimeout(()=>h.remove(),4000);
+}
+
+function rainHearts(){
+ setInterval(popHeart,1200);
+}
+</script>
+
+</body>
+</html>
